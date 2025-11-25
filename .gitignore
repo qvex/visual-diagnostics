@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+data/mvtec_ad/
+results/*.png
+results/*.jpg
+results/*.csv
+*.pt
+*.pth
+.idea/
+.vscode/
