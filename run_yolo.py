@@ -3,9 +3,16 @@ from typing import Union
 from pathlib import Path
 import time
 
+import torch
 import cv2
 import numpy as np
 from ultralytics import YOLO
+
+
+def get_device() -> str:
+    if torch.cuda.is_available():
+        return "cuda"
+    return "cpu"
 
 
 @dataclass(frozen=True)
@@ -51,9 +58,12 @@ def main(image_path: str, output_path: str = "results/output.png") -> None:
         print(f"Error: {image_result.error}")
         return
 
+    device = get_device()
     model = YOLO("yolov8n.pt")
+    model.to(device)
     results, latency_ms = run_detection(model, image_result.value)
 
+    print(f"Device: {device}")
     print(f"Inference time: {latency_ms:.2f} ms")
     print(f"Detections: {len(results[0].boxes)}")
 
