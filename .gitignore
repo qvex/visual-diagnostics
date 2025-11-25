@@ -8,6 +8,7 @@ data/mvtec_ad/
 results/*.png
 results/*.jpg
 results/*.csv
+results/patchcore/
 *.pt
 *.pth
 .idea/
