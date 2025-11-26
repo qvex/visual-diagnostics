@@ -10,15 +10,14 @@ def get_device() -> str:
 
 
 def train_yolo(data_yaml: Path, epochs: int = 50) -> YOLO:
-    model = YOLO("yolov8n.pt")
-
-    results = model.train(
+    model = YOLO("yolov8s.pt")
+    model.train(
         data=str(data_yaml),
         epochs=epochs,
         imgsz=640,
         batch=16,
         device=0 if torch.cuda.is_available() else "cpu",
-        project="results/yolo_neudet",
+        project="results/yolo_neudet_s",
         name="train",
         exist_ok=True,
         pretrained=True,
@@ -44,18 +43,16 @@ def evaluate_yolo(model: YOLO, data_yaml: Path) -> dict:
 def measure_latency(model: YOLO, img_path: Path, n_runs: int = 100) -> float:
     for _ in range(10):
         model(str(img_path), verbose=False)
-
     times = []
     for _ in range(n_runs):
         start = time.perf_counter()
         model(str(img_path), verbose=False)
         times.append((time.perf_counter() - start) * 1000)
-
     return sum(times) / len(times)
 
 
 def print_results(metrics: dict, latency_ms: float) -> None:
-    print(f"\nYOLOv8 NEU-DET Results [{get_device()}]")
+    print(f"\nYOLOv8s NEU-DET Results [{get_device()}]")
     print(f"  mAP@50: {metrics['mAP50']:.4f}  |  mAP@50-95: {metrics['mAP50-95']:.4f}")
     print(f"  Precision: {metrics['precision']:.4f}  |  Recall: {metrics['recall']:.4f}")
     print(f"  Latency: {latency_ms:.2f} ms ({1000/latency_ms:.1f} FPS)")
@@ -64,7 +61,7 @@ def print_results(metrics: dict, latency_ms: float) -> None:
 if __name__ == "__main__":
     data_yaml = Path("data/neu-det-yolo/neu-det.yaml")
 
-    print("Training YOLOv8 on NEU-DET...")
+    print("Training YOLOv8s on NEU-DET...")
     model = train_yolo(data_yaml, epochs=50)
 
     print("\nEvaluating on validation set...")
