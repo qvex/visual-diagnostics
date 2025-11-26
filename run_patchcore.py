@@ -106,17 +106,13 @@ def print_summary(results: list[PatchCoreResult]) -> None:
             by_label[r.label] = []
         by_label[r.label].append(r)
 
-    print(f"\n{'='*50}")
-    print(f"PatchCore Benchmark Results")
-    print(f"{'='*50}")
-    print(f"Total samples: {len(results)}")
-    print(f"Device: {get_device()}")
-    print(f"\nImage-level AUROC: {auroc:.4f}")
-
-    print(f"\nBy defect type (avg anomaly score):")
+    print(f"\nPatchCore Results [{get_device()}]")
+    print(f"  Samples: {len(results)}  |  AUROC: {auroc:.4f}")
+    print(f"\n  Defect Type         Count   Avg Score")
+    print(f"  {'-'*38}")
     for label, items in sorted(by_label.items()):
         avg_score = sum(r.anomaly_score for r in items) / len(items)
-        print(f"  {label}: {len(items)} samples, avg score: {avg_score:.4f}")
+        print(f"  {label:<18} {len(items):>5}   {avg_score:.4f}")
 
 
 def save_results_csv(results: list[PatchCoreResult], output_path: Path) -> None:
